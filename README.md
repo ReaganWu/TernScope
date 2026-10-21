@@ -1,137 +1,83 @@
 <div align="center">
 
+<img src="assets/ternscope-chip-v2.png" alt="TernScope: a ternary compute array with −1, 0, and +1 states." width="150">
+
 # TernScope
 
 ### Model–Hardware Co-Design for Efficient Ternary Endoscopic Segmentation
 
-**Compact segmentation. Ternary computation. Co-designed hardware.**
+Zhuoyu Wu · Wenhui Ou · Qiawei Zheng · Xuhong Qiu · Wenqi Fang · Raphaël C.-W. Phan
 
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-475569?style=flat-square)](LICENSE)
-[![Weights: ternary](https://img.shields.io/badge/Weights-%E2%88%921%20%2F%200%20%2F%20%2B1-7c3aed?style=flat-square)](#ternary-execution)
-[![Activations: 8-bit](https://img.shields.io/badge/Activations-8--bit-0891b2?style=flat-square)](#ternary-execution)
-[![Release: in preparation](https://img.shields.io/badge/Release-In_preparation-d97706?style=flat-square)](#release-status)
+Monash University · HKUST · SIAT, CAS · Southeast University
 
-Zhuoyu Wu · Wenhui Ou · Qiawei Zheng · Xuhong Qiu · Wenqi Fang · Raphael C.-W. Phan
-
-Monash University Malaysia · HKUST · SIAT, Chinese Academy of Sciences · Southeast University
-
-[Overview](#overview) · [Architecture](#architecture) · [Hardware](#hardware) · [Evaluation](#evaluation-protocol) · [Release status](#release-status) · [Citation](#citation)
+[Why TernScope?](#why-ternscope) · [Network](#network) · [Hardware](#hardware) · [Evaluation](#evaluation) · [Get started](#getting-started)
 
 </div>
 
 ---
 
-> **Release in preparation.** The manuscript has been submitted to arXiv. We are preparing the model code, pretrained checkpoints, and hardware artifacts for release. This repository currently provides the project overview and architecture figures; runnable code and checkpoint downloads will be added as they become available.
+**Included:** model code, Progressive QAT, one W2A8 inference checkpoint, and accelerator RTL. The manuscript has been submitted to arXiv; the public paper link will follow.
 
-## Overview
+## Why TernScope?
 
-TernScope co-designs a lightweight segmentation network and a ternary accelerator for efficient endoscopic polyp segmentation. Split-channel large-kernel blocks capture spatial context, structural re-parameterization fuses training branches, and **Ternary Progressive Quantization-aware Training (TPQ)** adapts the deployment graph to ternary weights and 8-bit activations.
+**TernScope co-designs a segmentation model and accelerator to reduce model size, computation, and circuit area together.** Split-channel large kernels preserve spatial context for polyp segmentation, while a narrow decoder combines semantic features and boundary detail.
+
+After branch fusion and progressive quantization, **all 25 convolutions—including the stem and prediction head—use ternary weights and 8-bit activations.** One ternary array therefore serves every convolution. Two-bit packing reduces weight traffic, sign selection replaces PE multiplication, and shared hardware handles scaling and multi-scale feature addition. These choices connect the network's numerical representation to the accelerator's storage and logic costs.
 
 | Parameters | Computation | Deployment graph | Quantization |
 | :---: | :---: | :---: | :---: |
 | **0.2483 M** | **0.0949 GMACs** | **25 convolutions** | **W2A8** |
 
-*Model statistics reported in the manuscript for a single RGB input at 256 × 256. Parameter count excludes additional quantization scales; MACs exclude normalization, activations, and interpolation.*
+*At RGB 256 × 256, batch 1. Parameters exclude quantization scales; MACs exclude normalization, activations, and interpolation.*
 
-The design connects three stages:
+## Network
 
-1. **Build compact spatial context.** SplitLK applies large spatial kernels to a subset of channels; the Nearest Unifier combines multi-scale features at a narrow width.
-2. **Fuse, then quantize.** Training branches merge into the deployment graph before TPQ progressively converts its convolution weights to ternary values.
-3. **Map ternary operators to hardware.** A 16 × 16 PE array uses sign selection and accumulation, with shared hardware for affine transforms and requantization.
+![TernScope-Net: SplitLK, structural re-parameterization, and the Nearest Unifier.](assets/architecture.png)
 
-## Architecture
+| Design | What it changes | Why it matters |
+| :--- | :--- | :--- |
+| **SplitLK** | Applies large spatial kernels to a subset of channels, then mixes across channels. | Retains a wide receptive field with less spatial computation. |
+| **Nearest Unifier** | Projects four encoder scales to 16 channels and fuses them through resizing and addition. | Combines semantic context and spatial detail while keeping the decoder narrow. |
+| **Branch fusion + TPQ** | Merges training branches before progressively adapting the deployment graph to ternary weights. | Removes redundant inference paths and trains all 25 convolutions for W2A8 execution. |
 
-![TernScope-Net architecture: split-channel large-kernel blocks, structural re-parameterization, and the Nearest Unifier decoder.](assets/architecture.png)
-
-### SplitLK · Spatial context at low cost
-
-Encoder stages use **32 / 64 / 96 / 128 channels**, while spatial convolutions process only **16 / 16 / 16 / 32 channels**. The remaining channels bypass spatial processing and rejoin the transformed features before pointwise mixing. Large kernels operate at lower spatial resolutions, where a wider receptive field is less expensive.
-
-### Nearest Unifier · Narrow multi-scale fusion
-
-All four encoder scales project to **16 channels**. Nearest-neighbor resizing aligns the features, and addition combines them without expanding the decoder width through concatenation. Convolutional refinement recovers spatial detail before the segmentation head.
-
-### TPQ · Fuse first, then learn ternary execution
-
-Batch normalization and parallel linear branches fuse into the deployment topology before quantization. TPQ then adapts the graph through W8A8, progressively converts layers from the deeper encoder toward the decoder and prediction layers, and finishes with the full W2A8 network. Validation Dice selects checkpoints from the fully W2A8 phase.
-
-### Ternary execution
-
-Each convolution weight is represented by a ternary code and a learned per-output-channel scale:
-
-$$
-\widehat{W}_c = s_c\,\operatorname{clip}\!\left(\operatorname{round}(W_c/s_c),\,-1,\,1\right), \qquad s_c > 0.
-$$
-
-For a ternary code $t \in \{-1, 0, +1\}$, the PE product $t \cdot a$ becomes **−a, 0, or +a**. General multipliers are removed from the PE product path. Per-channel scaling remains in the shared Affine & Quantization Engine.
-
-**W2A8** denotes two-bit storage for the three weight codes and 8-bit activations. Biases, scales, and accumulation use wider precision.
+**TPQ** is Ternary Progressive Quantization-aware Training: W8A8 adaptation, deep-to-shallow conversion through the encoder and decoder, then training of the fully W2A8 graph. Each output channel has a learned weight scale; biases, scaling, and accumulation retain wider precision.
 
 ## Hardware
 
+**Ternary weights change the PE itself.** A weight code in {−1, 0, +1} selects a negated activation, zero, or the activation for accumulation. Two-bit packing cuts convolution-weight payload to **one quarter of INT8**. The shared **Affine & Quantization Engine** performs per-channel scaling, bias addition, feature addition, rounding, and saturation.
+
 <div align="center">
-  <img src="assets/accelerator.png" alt="TernScope accelerator with a 16 by 16 ternary PE array, operand buffers, and a shared Affine and Quantization Engine." width="760">
+  <img src="assets/accelerator.png" alt="A 16 × 16 ternary PE array with shared affine and quantization hardware." width="640">
 </div>
 
-The accelerator combines:
+The manuscript reports **88.46% less compute-array area** and **70.28% less standard-cell area** than the original Gemmini under matched **Nangate45 / Yosys–ABC synthesis**, with **16 × 16 PE arrays**. These gains combine ternary arithmetic, narrower accumulation, and simpler control. See the [hardware guide](hardware/README.md) for the supplied flow and checkpoint-specific configuration.
 
-- A **16 × 16 ternary PE array** for sign selection and accumulation.
-- **Packed two-bit weights** and 8-bit activation buffers.
-- A shared **Affine & Quantization Engine** for per-channel scaling, bias, feature addition, rounding, and saturation.
-- A **load/store unit** connecting on-chip buffers to external memory.
+*Synthesis areas exclude SRAM macros, CPU, external DDR, clock-tree synthesis, and routing.*
 
-Under matched **Nangate45 / Yosys–ABC synthesis**, the manuscript reports an **88.46% reduction in compute-array area** relative to the original Gemmini with a 16 × 16 INT8 array. The result includes ternary arithmetic, narrower accumulation, and simpler control; array area excludes external SRAM macros, CPU, DDR, clock-tree synthesis, and routing.
+## Evaluation
 
-## Evaluation protocol
+Training uses **Kvasir-SEG** with a fixed **720 / 80 / 200** train/validation/test split. External evaluation uses **CVC-ClinicDB (612 images)** and **CVC-ColonDB (380 images)** without fine-tuning.
 
-Training uses **Kvasir-SEG only**. External evaluation measures transfer to ClinicDB and ColonDB without fine-tuning.
+Inputs are RGB 256 × 256. Dice and IoU are averaged per image at threshold 0.5; validation Dice selects checkpoints. TPQ uses FP32 initialization and no knowledge distillation.
 
-| Dataset | Role | Images |
-| :--- | :--- | ---: |
-| Kvasir-SEG | Training | 720 |
-| Kvasir-SEG | Validation and checkpoint selection | 80 |
-| Kvasir-SEG | Held-out testing | 200 |
-| CVC-ClinicDB | External evaluation | 612 |
-| CVC-ColonDB | External evaluation | 380 |
+## Getting started
 
-- **Input:** RGB, 256 × 256, normalized to [−1, 1].
-- **Resizing:** bilinear for images; nearest-neighbor for masks.
-- **Metrics:** per-image Dice and IoU, averaged over each evaluation set at threshold 0.5.
-- **TPQ training:** FP32 initialization, AdamW, batch size 2, base learning rate 2 × 10⁻⁴, 200 epochs, and no knowledge distillation.
+```bash
+python -m pip install -r software/requirements.txt
+python software/smoke.py
+python software/infer.py --image path/to/image.png --output runs/mask.png
+```
 
-The release will include the fixed split, evaluation commands, and checkpoint identities alongside the implementation. Dataset images and masks should be obtained from their original providers under the applicable terms.
+The default inference weight is bundled. Training needs an external FP32 initializer; datasets are obtained separately.
 
-## Release status
-
-| Component | Availability |
+| Directory | Contents |
 | :--- | :--- |
-| Project overview and architecture figures | Available in this repository |
-| Paper link and citation metadata | To be added when the arXiv record is public |
-| Model implementation and branch fusion | In preparation |
-| TPQ training and evaluation scripts | In preparation |
-| Pretrained checkpoints and checksums | In preparation |
-| Fixed data split and dataset preparation guide | In preparation |
-| Accelerator RTL and simulation instructions | In preparation |
-| Synthesis configuration and hardware result provenance | In preparation |
+| [software/](software/README.md) | Model, branch fusion, Progressive QAT, fixed split, inference and evaluation. |
+| [weights/](weights/README.md) | One tensor-only W2A8 checkpoint and its training metadata. |
+| [hardware/](hardware/README.md) | Final T300 RTL, integer reference, control generation, module tests and build scripts. |
 
-Installation, inference, and reproduction commands will be documented with the code release. Check the [repository releases](https://github.com/ReaganWu/TernScope/releases) for packaged artifacts.
-
-## Citation
-
-**TernScope: Model–Hardware Co-Design for Efficient Ternary Endoscopic Segmentation**
-
-Zhuoyu Wu, Wenhui Ou, Qiawei Zheng, Xuhong Qiu, Wenqi Fang, and Raphael C.-W. Phan.
-
-The manuscript has been submitted to arXiv. A direct paper link and BibTeX entry will be added when the public record is available.
-
-## License and contact
-
-This repository is licensed under the [Apache License 2.0](LICENSE). Third-party dependencies and datasets retain their respective licenses and terms.
-
-For questions, use [GitHub Issues](https://github.com/ReaganWu/TernScope/issues). Research correspondence: **Zhuoyu Wu**, [zhuoyu.wu@monash.edu](mailto:zhuoyu.wu@monash.edu).
+The arXiv link and BibTeX entry will be added when the public record is available.
 
 ---
 
-<div align="center">
-  <sub>TernScope · Model–hardware co-design for compact ternary segmentation</sub>
-</div>
+[Apache-2.0](LICENSE) · Contact: [Zhuoyu Wu](mailto:zhuoyu.wu@monash.edu)
