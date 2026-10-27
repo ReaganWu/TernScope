@@ -1,10 +1,10 @@
-module t300_ddr_harness #(parameter CLOCK_HZ=100000000)(input logic clk,reset,
+module ternscope_ddr_harness #(parameter CLOCK_HZ=100000000)(input logic clk,reset,
  input logic req_valid,output logic req_ready,input logic req_write,input logic [31:0] req_addr,input logic [15:0] req_rows,
  input logic wr_valid,output logic wr_ready,input logic [127:0] wr_data,
  output logic rd_valid,input logic rd_ready,output logic [127:0] rd_data,output logic rd_last,output logic done,error);
  logic aw_valid,aw_ready,w_valid,w_ready,w_last,b_valid,b_ready,ar_valid,ar_ready,r_valid,r_ready,r_last;
  logic [31:0] aw_addr,ar_addr;logic [7:0] aw_len,ar_len;logic [63:0] w_data,r_data;logic [1:0] b_resp,r_resp;
- t300_dma dma(.*);
+ ternscope_dma dma(.*);
  SimDRAM #(.ADDR_BITS(32),.DATA_BITS(64),.ID_BITS(4),.MEM_SIZE(268435456),.LINE_SIZE(64),.CLOCK_HZ(CLOCK_HZ),.MEM_BASE(0),.CHIP_ID(0)) dram(
  .clock(clk),.reset(reset),
  .axi_aw_ready(aw_ready),.axi_aw_valid(aw_valid),.axi_aw_bits_addr(aw_addr),.axi_aw_bits_len(aw_len),

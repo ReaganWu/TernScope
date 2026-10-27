@@ -1,4 +1,4 @@
-"""Portable phase-7 logic synthesis. Historical flow; excludes SRAM macro area."""
+"""TernScope logic synthesis with black-box SRAMs; excludes SRAM macro area."""
 import argparse
 import os
 from pathlib import Path
@@ -29,9 +29,9 @@ def main():
     env=dict(os.environ,OMP_NUM_THREADS='2',YOSYS_MAX_THREADS='2')
     def run(script,log):
         subprocess.run(['yosys','-Q','-l',str(output/log),'-p',script],cwd=output,env=env,check=True)
-    run(f'read_verilog -sv {sources}; chparam -set LUT_ENTRIES {config["lut_entries"]} t300_accelerator_top; hierarchy -check -top t300_accelerator_top; proc; opt; memory_dff; memory_collect; check; write_json collected.json','collect.log')
+    run(f'read_verilog -sv {sources}; chparam -set LUT_ENTRIES {config["lut_entries"]} ternscope_accelerator_top; hierarchy -check -top ternscope_accelerator_top; proc; opt; memory_dff; memory_collect; check; write_json collected.json','collect.log')
     subprocess.run([sys.executable,str(hardware/'synthesis/abstract_ram.py'),'collected.json','abstracted.json','memory_inventory.json'],cwd=output,check=True)
-    run('read_json abstracted.json; synth -top t300_accelerator_top -noabc -noshare -run begin:coarse; memory_map; opt -full; write_json premap.json','prepare.log')
+    run('read_json abstracted.json; synth -top ternscope_accelerator_top -noabc -noshare -run begin:coarse; memory_map; opt -full; write_json premap.json','prepare.log')
     import json
     netlist=json.loads((output/'premap.json').read_text())
     steps=['read_json premap.json']
@@ -41,8 +41,8 @@ def main():
     steps += ['techmap','opt -fast','dfflibmap -liberty '+yosys_quote(library),'abc -liberty '+yosys_quote(library)+' -D 10000','clean','check','stat -liberty '+yosys_quote(library),'write_json mapped.json','write_verilog -noattr mapped.v']
     (output/'map.ys').write_text('\n'.join(steps)+'\n')
     run('; '.join(steps),'mapping.log')
-    print('Historical phase-7 logic netlist:',output/'mapped.v')
-    print('This flow is not the later matched Gemmini/TernScope paper comparison; see hardware/README.md.')
+    print('Logic netlist:',output/'mapped.v')
+    print('For the paper comparison configuration and scope, see hardware/README.md.')
 
 
 if __name__=='__main__':

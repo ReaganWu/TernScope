@@ -1,11 +1,11 @@
-"""Deployment topology and shared training utilities; historical runners removed."""
+"""TernScope-Net deployment topology and shared TPQ training utilities."""
 import os, json, random, hashlib, math
 from pathlib import Path
 import numpy as np
 import torch
 from torch import nn
 from torch.nn import functional as F
-from tilepolyp.training import SegmentationSample, PolypSegmentationDataset, SegmentationMetrics
+from ternscope.training import SegmentationSample, PolypSegmentationDataset, SegmentationMetrics
 DATA = Path(os.environ.get("TERNSCOPE_DATA_ROOT", "data/Kvasir-SEG"))
 
 def seed(v=42):random.seed(v);np.random.seed(v);torch.manual_seed(v)
@@ -70,7 +70,8 @@ class Refine(nn.Module):
  def forward(self,x):return F.relu6(self.spatial(x))
 
 
-class DirectDeploy(nn.Module):
+class TernScopeDeploy(nn.Module):
+ """Branch-fused TernScope-Net with stable checkpoint tensor names."""
  def __init__(self):
   super().__init__()
   self.down1=cba(3,16,3,2);self.down2=Down(16,32);self.down3=Down(32,64);self.down4=Down(64,96);self.down5=Down(96,128)

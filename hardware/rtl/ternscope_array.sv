@@ -4,7 +4,7 @@
 // W2 encoding: 00=zero, 01=+1, 10=-1; 11 reserved (treated zero).
 // One independent 16-term dot product per column per accepted vector.
 // Each of 256 PEs registers its running sum; rows form 16 real stages.
-module t300_ternary_pe13(input wire clk, input wire reset, input wire ce,
+module ternscope_ternary_pe(input wire clk, input wire reset, input wire ce,
  input wire signed [7:0] activation, input wire [1:0] weight,
  input wire signed [12:0] sum_in, output reg signed [12:0] sum_out);
  wire signed [12:0] extended = {{5{activation[7]}},activation};
@@ -16,7 +16,7 @@ module t300_ternary_pe13(input wire clk, input wire reset, input wire ce,
  endcase
 endmodule
 
-module t300_array13(input wire clk,input wire reset,
+module ternscope_array(input wire clk,input wire reset,
  input wire weight_valid, output wire weight_ready,
  input wire [3:0] weight_row,input wire [31:0] weight_data,
  input wire in_valid,output wire in_ready,input wire [127:0] in_activation,
@@ -74,7 +74,7 @@ module t300_array13(input wire clk,input wire reset,
  for(c=0;c<16;c=c+1) begin: columns
  wire signed [12:0] prior;
  if(r==0) assign prior=0; else assign prior=sums[r-1][c*13+:13];
- t300_ternary_pe13 pe(clk,reset,ce,a,weights[r][c*2+:2],prior,sums[r][c*13+:13]);
+ ternscope_ternary_pe pe(clk,reset,ce,a,weights[r][c*2+:2],prior,sums[r][c*13+:13]);
  end
  end endgenerate
  generate for(genvar o=0;o<16;o=o+1) begin: outputs

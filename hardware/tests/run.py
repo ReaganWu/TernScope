@@ -1,4 +1,4 @@
-"""Run self-contained T300 module checks; generated binaries stay outside sources."""
+"""Run self-contained TernScope module checks; generated binaries stay outside sources."""
 import argparse
 from pathlib import Path
 import shutil
@@ -15,9 +15,9 @@ def main():
     hardware=Path(__file__).resolve().parents[1]
     args.output.mkdir(parents=True,exist_ok=True)
     cases={
-        'tb_array':['rtl/t300_array13.sv','tests/tb_array.sv'],
+        'tb_array':['rtl/ternscope_array.sv','tests/tb_array.sv'],
         'tb_affine':['rtl/shared_engine.sv','tests/tb_affine.sv'],
-        'tb_cdc':['rtl/async_fifo.sv','rtl/t300_row_cdc.sv','tests/tb_cdc.sv'],
+        'tb_cdc':['rtl/async_fifo.sv','rtl/ternscope_row_cdc.sv','tests/tb_cdc.sv'],
     }
     for name,files in cases.items():
         binary=(args.output/(name+'.vvp')).resolve()

@@ -7,7 +7,7 @@ source=t.PRETRAINED;source_sha=t.TH
 assert t.r.sha(source)==source_sha
 c=torch.load(source,map_location='cpu',weights_only=False)
 pretrained_epoch=c.get('epoch')
-base=t.create_arraypolyp_variant('replk_tile',input_size=256)
+base=t.create_ternscope(input_size=256)
 base.load_state_dict(c['model'],strict=True);base.eval();base.switch_to_deploy()
 m=t.model().cuda()
 names=[n for n,q in m.named_modules() if isinstance(q,t.p.QConv)]
@@ -29,7 +29,7 @@ split=json.loads((t.SRC.parent/'data'/'kvasir_split.json').read_text());assert [
 ds=t.r.dataset(split['train'],True);op=t.a.optimizer(m);t.transition(m,op,1,dict(next_batch=0),ds);t.observer(m,200)
 state=t.r.cpu(m.state_dict());fp=t.r.fingerprint(state)
 t.r.atomic_save(t.ROOT/'initial_fp32.pth',dict(model=state,pretrained_loaded=True,source_fp32_sha256=t.TH,seed=42,fingerprint=fp,weight_bits={n:8 for n in names},activation_bits=8))
-files=[Path(t.__file__).resolve(),Path(__file__)]+list(t.SRC.glob('*.py'))+list((t.SRC/'tilepolyp').glob('*.py'))
+files=[Path(t.__file__).resolve(),Path(__file__)]+list(t.SRC.glob('*.py'))+list((t.SRC/'ternscope').glob('*.py'))
 cfg=dict(experiment='progressive_groupwise_W8_to_ternary_A8_noKD_FP32_bs2',epochs=200,batch_size=2,seed=42,samples_per_epoch=720,optimizer_steps=72000,initialization='exact25 FP32 folded Conv latent weights/biases; fresh W8 per-output scales for all25; never trained ternary best',source_initialization=str(source),source_initialization_sha256=source_sha,pretrained_checkpoint=str(t.PRETRAINED),pretrained_sha256=t.TH,pretrained_epoch=pretrained_epoch,initial_file_sha256=t.r.sha(t.ROOT/'initial_fp32.pth'),initial_fp32_qat_fingerprint=fp,source_hashes={str(f):t.r.sha(f) for f in files},split_sha256=t.r.sha(t.SRC.parent/'data'/'kvasir_split.json'),KD=False,kd_weight=0,loss='BCEWithLogits+softDice',groups=t.GROUPS,quantization='epochs1-10 all25 W8; groups convert to ternary at11/21/31/41/51/61/71/81;all53 existing activation boundaries always A8 signed[-127,127];FP32 latent,bias,accumulators,Add arithmetic;fakequant',observer='first64 augmented training recalibration at1 and each group change; EMA .99 epochs1-20 and 3epochs starting each change, otherwise frozen; eval never updates',optimizer='fresh AdamW foreachFalse weight_decay1e-5 including scales; clear only changed log_scale moments at each change',base_lr=2e-4,lr_schedule='original 5epoch warmup cosinefloor.02;each change3epochs min(original_lr,2e-5), then original cosine',gradient_clip=1.,augmentation='original PIL paired;SHA25642:epoch:index;order randperm seed42000+epoch',selection='final best only fullW2A8 epochs81-200 validation80 macro Dice threshold.5; phase best/last also retained;no earlystop',test_ood_access=False,amp=False,tf32=False,deterministic=True,threads=2,workers=0,versions=dict(python=platform.python_version(),torch=torch.__version__,cuda=torch.version.cuda,numpy=t.np.__version__),python=t.sys.executable)
 t.write(t.ROOT,'shared_config.json',cfg);before=t.r.sha(t.ROOT/'initial_fp32.pth');rows=[]
 # Separate process only: smoke every real switch; no formal optimizer/RNG is reused.
@@ -50,4 +50,4 @@ op2=t.a.optimizer(mm);op2.load_state_dict(copy.deepcopy(op.state_dict()));x,y=t.
 for obj,opt in [(m,op),(mm,op2)]:
  obj.train();opt.zero_grad();loss=t.r.loss_fn(obj(x),y);loss.backward();torch.nn.utils.clip_grad_norm_(obj.parameters(),1,error_if_nonfinite=True);opt.step()
 assert t.r.fingerprint(m.state_dict())==t.r.fingerprint(mm.state_dict());assert t.r.sha(t.ROOT/'initial_fp32.pth')==before
-t.write(t.ROOT,'smoke.json',dict(status='PASS',all25_FP32_masters_exact=True,group_coverage_exact25_no_duplicates=True,rows=rows,strict_resume_next_step_equal=True,formal_initial_unchanged=True,separate_process_from_formal=True,no_teacher_noKD=True));print('PROGRESSIVE_W2A8_SMOKE_PASS',flush=True)
+t.write(t.ROOT,'smoke.json',dict(status='PASS',all25_FP32_masters_exact=True,group_coverage_exact25_no_duplicates=True,rows=rows,strict_resume_next_step_equal=True,formal_initial_unchanged=True,separate_process_from_formal=True,no_teacher_noKD=True));print('TPQ_W2A8_SMOKE_PASS',flush=True)

@@ -10,13 +10,13 @@ Zhuoyu Wu · Wenhui Ou · Qiawei Zheng · Xuhong Qiu · Wenqi Fang · Raphaël C
 
 Monash University · HKUST · SIAT, CAS · Southeast University
 
-[Why TernScope?](#why-ternscope) · [Network](#network) · [Hardware](#hardware) · [Evaluation](#evaluation) · [Get started](#getting-started)
+[Paper](https://arxiv.org/abs/2610.29617) · [Why TernScope?](#why-ternscope) · [Network](#network) · [Hardware](#hardware) · [Evaluation](#evaluation) · [Get started](#getting-started)
 
 </div>
 
 ---
 
-**Included:** model code, Progressive QAT, one W2A8 inference checkpoint, and accelerator RTL. The manuscript has been submitted to arXiv; the public paper link will follow.
+**Included:** TernScope-Net, TPQ training, one W2A8 inference checkpoint, and accelerator RTL. Read the [paper on arXiv](https://arxiv.org/abs/2610.29617).
 
 ## Why TernScope?
 
@@ -72,11 +72,23 @@ The default inference weight is bundled. Training needs an external FP32 initial
 
 | Directory | Contents |
 | :--- | :--- |
-| [software/](software/README.md) | Model, branch fusion, Progressive QAT, fixed split, inference and evaluation. |
+| [software/](software/README.md) | TernScope-Net, branch fusion, TPQ, fixed split, inference and evaluation. |
 | [weights/](weights/README.md) | One tensor-only W2A8 checkpoint and its training metadata. |
-| [hardware/](hardware/README.md) | Final T300 RTL, integer reference, control generation, module tests and build scripts. |
+| [hardware/](hardware/README.md) | Accelerator RTL, integer reference, control generation, module tests and build scripts. |
 
-The arXiv link and BibTeX entry will be added when the public record is available.
+## Citation
+
+```bibtex
+@misc{wu2026ternscope,
+  title = {TernScope: Model-Hardware Co-Design for Efficient Ternary Endoscopic Segmentation},
+  author = {Zhuoyu Wu and Wenhui Ou and Qiawei Zheng and Xuhong Qiu and Wenqi Fang and Raphaël C.-W. Phan},
+  year = {2026},
+  eprint = {2610.29617},
+  archivePrefix = {arXiv},
+  primaryClass = {eess.IV},
+  url = {https://arxiv.org/abs/2610.29617}
+}
+```
 
 ---
 

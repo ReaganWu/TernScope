@@ -2,7 +2,7 @@ module tb_ddr;
  bit clk=0;always #5 clk=~clk;bit reset=1;
  logic req_valid=0,req_ready,req_write;logic [31:0] req_addr;logic [15:0] req_rows;
  logic wr_valid=0,wr_ready;logic[127:0]wr_data;logic rd_valid,rd_ready=0;logic[127:0]rd_data;logic rd_last,done,error;
- t300_ddr_harness dut(.*);
+ ternscope_ddr_harness dut(.*);
  integer cycles=0,wcount=0,rcount=0,startcycle;integer bursts=0;
  always @(posedge clk) begin cycles<=cycles+1;if(cycles>100000)$fatal(1,"timeout");if(dut.ar_valid&&dut.ar_ready||dut.aw_valid&&dut.aw_ready)begin bursts<=bursts+1;if(dut.ar_len>7||dut.aw_len>7)$fatal(1,"oversized DRAM transaction");end end
  function automatic [127:0] pattern(input integer n);pattern={32'(n^32'hfedcba98),32'(n*173),32'(n+91),32'(n^32'h01234567)};endfunction

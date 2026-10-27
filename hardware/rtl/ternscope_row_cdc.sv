@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module t300_row_cdc(input logic clk,reset,mem_clk,mem_reset,
+module ternscope_row_cdc(input logic clk,reset,mem_clk,mem_reset,
  input logic req_valid,output logic req_ready,input logic req_write,input logic[31:0]req_addr,input logic[15:0]req_rows,
  input logic wr_valid,output logic wr_ready,input logic[127:0]wr_data,
  output logic rd_valid,input logic rd_ready,output logic[127:0]rd_data,output logic rd_last,

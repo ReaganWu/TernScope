@@ -1,4 +1,4 @@
-"""Launch the supplied 200-epoch CUDA recipes with explicit local paths."""
+"""Train TernScope-Net with the 200-epoch TPQ recipe and explicit local paths."""
 import argparse
 import json
 import os
@@ -14,7 +14,7 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--gpu', default='0', help='One CUDA device index or UUID.')
     action = parser.add_mutually_exclusive_group()
-    action.add_argument('--prepare', action='store_true', help='Fold FP32, initialize scales, and run the original preparation checks.')
+    action.add_argument('--prepare', action='store_true', help='Fold FP32, initialize scales, and check TPQ initialization and quantization transitions.')
     action.add_argument('--resume', action='store_true')
     args = parser.parse_args()
     if ',' in args.gpu or not args.gpu.strip():
@@ -30,7 +30,7 @@ def main():
     env = dict(os.environ, TERNSCOPE_RUN_DIR=str(args.output.resolve()),
                TERNSCOPE_DATA_ROOT=str(args.data.resolve()), TERNSCOPE_FP32=str(args.fp32.resolve()),
                CUDA_VISIBLE_DEVICES=args.gpu, PYTHONDONTWRITEBYTECODE='1')
-    script = software/'training/progressive'/('prepare.py' if args.prepare else 'train.py')
+    script = software/'training/tpq'/('prepare.py' if args.prepare else 'train.py')
     command = [sys.executable, str(script)]
     if not args.prepare:
         command += ['--batch','2','--gpu',args.gpu]

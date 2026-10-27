@@ -1,22 +1,14 @@
-"""Dataset, augmentation and metric utilities for ArrayPolypNet training."""
-
+"""Dataset, augmentation, and segmentation metrics for TernScope-Net."""
 from __future__ import annotations
-
-import json
 import random
-from dataclasses import asdict, dataclass
-from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Sequence, Tuple
-
+from dataclasses import dataclass
+from typing import Dict, List, Optional, Sequence, Tuple
 import numpy as np
 import torch
 from PIL import Image, ImageEnhance, ImageFilter
 from torch import Tensor
 from torch.nn import functional as F
 from torch.utils.data import Dataset
-
-
-IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".bmp"}
 
 
 @dataclass(frozen=True)
@@ -26,95 +18,6 @@ class SegmentationSample:
     mask: str
     sample_id: str
     sequence: Optional[str] = None
-
-
-def discover_pairs(dataset: str, image_dir: Path, mask_dir: Path) -> List[SegmentationSample]:
-    images = sorted(
-        path for path in image_dir.iterdir() if path.is_file() and path.suffix.lower() in IMAGE_SUFFIXES
-    )
-    masks = {
-        path.name: path
-        for path in mask_dir.iterdir()
-        if path.is_file() and path.suffix.lower() in IMAGE_SUFFIXES
-    }
-    missing = [path.name for path in images if path.name not in masks]
-    if missing:
-        raise FileNotFoundError(f"{dataset}: {len(missing)} masks missing; first={missing[0]}")
-    return [
-        SegmentationSample(dataset, str(path), str(masks[path.name]), path.name)
-        for path in images
-    ]
-
-
-def discover_polypgen(
-    root: Path, sequences: Optional[Sequence[str]] = None
-) -> List[SegmentationSample]:
-    selected = set(sequences) if sequences else None
-    result: List[SegmentationSample] = []
-    sequence_dirs = sorted(
-        (path for path in root.glob("seq*") if path.is_dir()),
-        key=lambda path: int(path.name[3:]),
-    )
-    discovered = {path.name for path in sequence_dirs}
-    if selected is not None:
-        missing = selected.difference(discovered)
-        if missing:
-            raise FileNotFoundError(
-                f"PolypGen sequences missing under {root}: {sorted(missing)}"
-            )
-    for sequence_dir in sequence_dirs:
-        if selected is not None and sequence_dir.name not in selected:
-            continue
-        image_dir = sequence_dir / "images"
-        mask_dir = sequence_dir / "masks"
-        for sample in discover_pairs("PolypGen", image_dir, mask_dir):
-            result.append(
-                SegmentationSample(
-                    sample.dataset,
-                    sample.image,
-                    sample.mask,
-                    f"{sequence_dir.name}/{sample.sample_id}",
-                    sequence=sequence_dir.name,
-                )
-            )
-    return result
-
-
-def build_kvasir_split(
-    samples: Sequence[SegmentationSample],
-    historical_manifest: Path,
-    seed: int = 42,
-    validation_fraction_of_train_pool: float = 0.1,
-) -> Dict[str, List[SegmentationSample]]:
-    """Preserve the historical 200-image test set, then split its 800-image complement."""
-
-    with historical_manifest.open("r", encoding="utf-8") as handle:
-        manifest = json.load(handle)
-    historical_test = set(manifest["test_manifest"]["Kvasir"])
-    by_name = {sample.sample_id: sample for sample in samples}
-    missing = historical_test.difference(by_name)
-    if missing:
-        raise FileNotFoundError(f"historical Kvasir test files missing: {sorted(missing)[:3]}")
-    test = [by_name[name] for name in manifest["test_manifest"]["Kvasir"]]
-    pool = [sample for sample in samples if sample.sample_id not in historical_test]
-    rng = random.Random(seed + 1)
-    rng.shuffle(pool)
-    validation_count = round(len(pool) * validation_fraction_of_train_pool)
-    validation = sorted(pool[:validation_count], key=lambda item: item.sample_id)
-    train = sorted(pool[validation_count:], key=lambda item: item.sample_id)
-    if len(train) + len(validation) + len(test) != len(samples):
-        raise RuntimeError("Kvasir split is not exhaustive")
-    return {"train": train, "validation": validation, "test": test}
-
-
-def serialize_split(split: Dict[str, Sequence[SegmentationSample]]) -> Dict[str, object]:
-    return {
-        "counts": {name: len(items) for name, items in split.items()},
-        "samples": {
-            name: [asdict(sample) for sample in items]
-            for name, items in split.items()
-        },
-    }
 
 
 class PolypSegmentationDataset(Dataset[Tuple[Tensor, Tensor, str, str, str]]):
@@ -182,12 +85,6 @@ class PolypSegmentationDataset(Dataset[Tuple[Tensor, Tensor, str, str, str]]):
             sample.sample_id,
             sample.sequence or "",
         )
-
-
-def seed_worker(worker_id: int) -> None:
-    worker_seed = torch.initial_seed() % (2**32)
-    random.seed(worker_seed)
-    np.random.seed(worker_seed)
 
 
 def _boundary(mask: Tensor, kernel_size: int = 3) -> Tensor:

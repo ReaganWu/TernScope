@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Fixed frozen-graph accelerator. All frame arithmetic/control executes in RTL.
 // Source cache fills are initially serialized before destructive feature reuse.
-module t300_core #(parameter integer LUT_ENTRIES=5376)(input logic clk,reset,start,cold,
+module ternscope_core #(parameter integer LUT_ENTRIES=5376)(input logic clk,reset,start,cold,
  input logic input_valid,output logic input_ready,input logic [127:0] input_data,
  output logic host_valid,input logic host_ready,output logic [127:0] host_data,
  output logic done,error,output logic [63:0] cycles,
@@ -60,7 +60,7 @@ module t300_core #(parameter integer LUT_ENTRIES=5376)(input logic clk,reset,sta
  acc_row_fifo fifo(.clk(clk),.reset(pipe_reset),.in_valid(drain_valid&&state==DRAIN),.in_ready(fifo_inready),.in_data(drain_data),.configured_lanes(nf(13)==1?5'd1:5'd16),.out_valid(fifo_outvalid),.out_ready(fifo_outready),.out_data(fifo_data),.out_mask(fifo_mask),.out_tag(fifo_tag),.occupancy(fifo_occupancy));
  wire [31:0]wq;reg[3:0]wqt;reg wqvalid;wire[127:0]stem_q;reg stem_valid;
  logic av,ar,wv,wr;logic[127:0] aa;logic[31:0] at,wd;logic[3:0]weightrow;wire aov;wire[511:0]dot;wire[31:0]dot_tag;wire dot_clear;
- t300_array13 array(.clk(clk),.reset(reset),.weight_valid(wv),.weight_ready(wr),.weight_row(weightrow),.weight_data(wd),.in_valid(av),.in_ready(ar),.in_activation(aa),.in_tag(at),.in_clear(kb==0),.out_valid(aov),.out_ready(1'b1),.out_dot(dot),.out_tag(dot_tag),.out_clear(dot_clear));
+ ternscope_array array(.clk(clk),.reset(reset),.weight_valid(wv),.weight_ready(wr),.weight_row(weightrow),.weight_data(wd),.in_valid(av),.in_ready(ar),.in_activation(aa),.in_tag(at),.in_clear(kb==0),.out_valid(aov),.out_ready(1'b1),.out_dot(dot),.out_tag(dot_tag),.out_clear(dot_clear));
  reg q1v,q2v,q1pad;wire[127:0]cq,q2a;reg [31:0]q1tag,q2tag;integer q1edge;
  logic engine_ready,engine_out_valid;wire[31:0] engine_result,engine_tag;wire[3:0]engine_mask;
  reg job_valid,job_mode;reg[127:0]job_a,job_m;reg[191:0]job_b;reg[31:0]job_tag;reg[3:0]job_mask;
@@ -128,7 +128,7 @@ module t300_core #(parameter integer LUT_ENTRIES=5376)(input logic clk,reset,sta
  wire[7:0]edge_write_data=lutrom[nf(18+10*edgecontext+6)*256+edgepos];
  genvar el;
  generate for(el=0;el<16;el=el+1)begin:edges
- t300_edge_bank eb(.clk(clk),.we(state==EDGELOAD),.re(q1v),.zero(q1pad),.waddr(edgecontext*256+edgepos),.raddr(q1edge*256+cq[el*8+:8]),.wdata(edge_write_data),.rdata(q2a[el*8+:8]));
+ ternscope_edge_bank eb(.clk(clk),.we(state==EDGELOAD),.re(q1v),.zero(q1pad),.waddr(edgecontext*256+edgepos),.raddr(q1edge*256+cq[el*8+:8]),.wdata(edge_write_data),.rdata(q2a[el*8+:8]));
  end endgenerate
  always_comb begin
  completed_row=pack_data;
@@ -151,7 +151,7 @@ module t300_core #(parameter integer LUT_ENTRIES=5376)(input logic clk,reset,sta
  generate for(fb=0;fb<3;fb=fb+1)begin:feature_banks
  wire we=feature_commit&&ni!=0&&(completed_physical>>12)==fb;
  wire re=feature_re&&(feature_addr>>12)==fb;
- t300_sram_1rw #(.W(128),.A(12))ram(.clk(clk),.en(we||re),.we(we),.addr(we?completed_physical[11:0]:feature_addr[11:0]),.wdata(completed_row),.rdata(feature_q[fb]));
+ ternscope_sram_1rw #(.W(128),.A(12))ram(.clk(clk),.en(we||re),.we(we),.addr(we?completed_physical[11:0]:feature_addr[11:0]),.wdata(completed_row),.rdata(feature_q[fb]));
  end endgenerate
  logic cache_re,cache_active_we,cache_inactive_we;integer cache_addr,cache_active_wa,cache_inactive_wa;logic[127:0]cache_active_wd,cache_inactive_wd;wire[127:0]cache_q[0:1];
  always_comb begin
@@ -173,7 +173,7 @@ module t300_core #(parameter integer LUT_ENTRIES=5376)(input logic clk,reset,sta
  wire re=active_cache==cbk&&cache_re;
  wire[10:0]wa=active_cache==cbk?cache_active_wa:cache_inactive_wa;
  wire[127:0]data=active_cache==cbk?cache_active_wd:cache_inactive_wd;
- t300_sram_1rw #(.W(128),.A(11))ram(.clk(clk),.en(we||re),.we(we),.addr(we?wa:cache_addr[10:0]),.wdata(data),.rdata(cache_q[cbk]));
+ ternscope_sram_1rw #(.W(128),.A(11))ram(.clk(clk),.en(we||re),.we(we),.addr(we?wa:cache_addr[10:0]),.wdata(data),.rdata(cache_q[cbk]));
  end endgenerate
  wire acc_drain_read=state==DRAIN&&(!drain_valid||fifo_inready)&&drain_count<tf(2);
  wire[511:0]acc_data;wire[511:0]acc_write_data;
@@ -181,15 +181,15 @@ module t300_core #(parameter integer LUT_ENTRIES=5376)(input logic clk,reset,sta
  generate for(ac=0;ac<16;ac=ac+1)begin:acc_add
  assign acc_write_data[ac*32+:32]=apclear?adot[ac*32+:32]:$signed(aq[ac*32+:32])+$signed(adot[ac*32+:32]);
  end endgenerate
- t300_sram_1r1w #(.W(512),.A(7))acc_ram(.clk(clk),.re(aov||acc_drain_read),.we(apvalid),.raddr(aov?dot_tag[6:0]:drain_count[6:0]),.waddr(aptag[6:0]),.wdata(acc_write_data),.rdata(acc_data));
+ ternscope_sram_1r1w #(.W(512),.A(7))acc_ram(.clk(clk),.re(aov||acc_drain_read),.we(apvalid),.raddr(aov?dot_tag[6:0]:drain_count[6:0]),.waddr(aptag[6:0]),.wdata(acc_write_data),.rdata(acc_data));
  assign aq=acc_data;assign drain_data=acc_data;
  wire weight_re=state==WEIGHTLOAD&&(!wqvalid||wr)&&wrow<16;
  wire[127:0]weight_q;
- t300_sram_1rw #(.W(128),.A(12))weight_ram(.clk(clk),.en(weight_re||(state==COLDREAD&&rd_valid)),.we(state==COLDREAD&&rd_valid),.addr(state==COLDREAD?fi[11:0]:((nf(15)/16)+(kb*nf(6)+nb)*4+wrow/4)),.wdata(rd_data),.rdata(weight_q));
+ ternscope_sram_1rw #(.W(128),.A(12))weight_ram(.clk(clk),.en(weight_re||(state==COLDREAD&&rd_valid)),.we(state==COLDREAD&&rd_valid),.addr(state==COLDREAD?fi[11:0]:((nf(15)/16)+(kb*nf(6)+nb)*4+wrow/4)),.wdata(rd_data),.rdata(weight_q));
  assign wq=weight_q[wqt[1:0]*32+:32];
  wire stem_re=state==STEMWRITE&&(!stem_valid||wr_ready)&&stem_count<tf(2);
  wire stem_we=feature_commit&&ni==0;
- t300_sram_1rw #(.W(128),.A(8))stem_ram(.clk(clk),.en(stem_re||stem_we),.we(stem_we),.addr(stem_we?(engine_tag>>2):stem_count[7:0]),.wdata(completed_row),.rdata(stem_q));
+ ternscope_sram_1rw #(.W(128),.A(8))stem_ram(.clk(clk),.en(stem_re||stem_we),.we(stem_we),.addr(stem_we?(engine_tag>>2):stem_count[7:0]),.wdata(completed_row),.rdata(stem_q));
  always_comb begin
  addpixel0=((div_small(tf(1)+addm,nf(2)))>>nf(23))*nf(25)+((rem_small(tf(1)+addm,nf(2)))>>nf(22));
  addpixel1=((div_small(tf(1)+addm,nf(2)))>>nf(33))*nf(35)+((rem_small(tf(1)+addm,nf(2)))>>nf(32));

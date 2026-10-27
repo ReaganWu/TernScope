@@ -1,4 +1,4 @@
-"""Combine fixed T300 geometry with the selected checkpoint's numeric parameters."""
+"""Combine fixed TernScope geometry with the selected checkpoint's numeric parameters."""
 import argparse
 import json
 from pathlib import Path
@@ -28,13 +28,13 @@ def main():
         nodes.append(sum(v<<(16*i) for i,v in enumerate(fields)))
         m=parameters[node['key']+'_M'];b=parameters[node['key']+'_B']
         if np.any(m<0) or np.any(m>=(1<<25)) or np.any(np.abs(b)>=(1<<38)):
-            parser.error(f'Numeric parameters exceed the bounded T300 engine at {node["name"]}.')
+            parser.error(f'Numeric parameters exceed the bounded TernScope engine at {node["name"]}.')
         if node['kind']=='conv':
             weights=parameters[node['key']+'_W'].astype(np.int64)
             bound=127*np.abs(weights).sum((1,2,3))
             channels=len(bound)
             if np.any(bound>=(1<<19)) or np.any(bound*m[:channels]+np.abs(b[:channels])>=(1<<38)):
-                parser.error(f'Worst-case ternary accumulation exceeds the bounded T300 engine at {node["name"]}.')
+                parser.error(f'Worst-case ternary accumulation exceeds the bounded TernScope engine at {node["name"]}.')
         multipliers.extend(m.tolist());biases.extend(b.tolist())
         coeff=node.get('add_coefficients',[0,0])
         if node['kind']=='add' and (node['add_shift']!=24 or max(coeff)>=(1<<25)):
@@ -42,7 +42,7 @@ def main():
         add0.append(coeff[0]);add1.append(coeff[1])
         weight_base+=parameters[node['key']+'_W2'].nbytes
     if len(multipliers)!=1104 or weight_base!=62080:
-        parser.error('Packed parameter dimensions differ from the T300 layout.')
+        parser.error('Packed parameter dimensions differ from the TernScope layout.')
     # Check the actual independent-oracle sample arithmetic before narrowing it.
     for golden in sorted(args.artifacts.glob('golden_validation_*.npz')):
         with np.load(golden) as sample:

@@ -32,21 +32,21 @@ def main():
     output=args.output.resolve();output.mkdir(parents=True,exist_ok=True)
     if args.micro:
         mode=['--binary','--timing'];top='tb_ddr'
-        sources=[hardware/'rtl/t300_dma.sv',sim/'t300_ddr_harness.sv',sim/'tb_ddr.sv']
+        sources=[hardware/'rtl/ternscope_dma.sv',sim/'ternscope_ddr_harness.sv',sim/'tb_ddr.sv']
     else:
         if args.control is None:parser.error('--control is required for full-network build.')
         config=json.loads((args.control/'config.json').read_text())
-        mode=['--cc','--exe','--public-flat-rw'];top='t300_system_500'
+        mode=['--cc','--exe','--public-flat-rw'];top='ternscope_system'
         mode += ['-GLUT_ENTRIES='+str(config['lut_entries'])]
-        sources=[hardware/'rtl'/n for n in ['t300_mem.sv','t300_array13.sv','acc_row_fifo.sv','shared_engine.sv','t300_core.sv','t300_dma.sv','async_fifo.sv','t300_row_cdc.sv']]
-        sources += [sim/'t300_ddr_harness.sv',sim/'t300_system_500.sv',sim/'fullsim_500.cpp']
-    sources += [support/'vsrc/SimDRAM.v']+[memory/n for n in ['SimDRAM_t300.cc','mm.cc','mm_dramsim2.cc','host_memory.cc']]
+        sources=[hardware/'rtl'/n for n in ['ternscope_mem.sv','ternscope_array.sv','acc_row_fifo.sv','shared_engine.sv','ternscope_core.sv','ternscope_dma.sv','async_fifo.sv','ternscope_row_cdc.sv']]
+        sources += [sim/'ternscope_ddr_harness.sv',sim/'ternscope_system.sv',sim/'simulate.cpp']
+    sources += [support/'vsrc/SimDRAM.v']+[memory/n for n in ['SimDRAM_ternscope.cc','mm.cc','mm_dramsim2.cc','host_memory.cc']]
     flags=' '.join(shlex.quote('-I'+str(p)) for p in [memory,support/'csrc',dramsim,fesvr/'include'])
     libraries=' '.join(shlex.quote(str(p)) for p in [dramsim/'libdramsim.a',fesvr/'lib/libfesvr.a'])+' -lpthread'
     command=['verilator',*mode,'--build','--vpi','--top-module',top,'-Wno-fatal','-j',str(args.jobs),'--Mdir',str(output),*[str(p) for p in sources],'-CFLAGS',flags,'-LDFLAGS',libraries]
     subprocess.run(command,check=True)
     print('Built:',output/('V'+top))
-    print('Run full-network simulation from hardware/control; pass +data and +dramsim_ini_dir explicitly.')
+    print('Run full-network simulation from the generated control directory; pass +data and +dramsim_ini_dir explicitly.')
 
 
 if __name__=='__main__':

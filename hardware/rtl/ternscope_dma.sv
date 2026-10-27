@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // 128b row client; single outstanding AXI64, <=64B bursts.
-module t300_dma(input logic clk,reset,
+module ternscope_dma(input logic clk,reset,
  input logic req_valid,output logic req_ready,input logic req_write,
  input logic [31:0] req_addr,input logic [15:0] req_rows,
  input logic wr_valid,output logic wr_ready,input logic [127:0] wr_data,

@@ -10,7 +10,7 @@ sys.path.insert(0,str(SRC))
 import training_utils as a
 import topology as r
 import quantization as p
-from tilepolyp import create_arraypolyp_variant
+from ternscope import create_ternscope
 r.DATA=Path(os.environ['TERNSCOPE_DATA_ROOT'])
 PRETRAINED=Path(os.environ['TERNSCOPE_FP32'])
 TH=r.sha(PRETRAINED)
@@ -34,7 +34,7 @@ def act_forward(self,x):
 p.Act8.forward=act_forward
 
 def model():
- m=p.QuantGraph(r.DirectDeploy().eval(),'int8')
+ m=p.QuantGraph(r.TernScopeDeploy().eval(),'int8')
  for q in m.modules():
   if isinstance(q,p.Act8):q.register_buffer('abits',torch.tensor(8));q.register_buffer('adaptive',torch.tensor(False));q.register_buffer('updates',torch.tensor(0,dtype=torch.int64))
  return m

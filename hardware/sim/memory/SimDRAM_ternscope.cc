@@ -184,4 +184,4 @@ extern "C" void memory_tick(
     *b_resp = mm->b_resp();
 }
 
-extern "C" int t300_actual_dramsim_backend() { return use_dramsim ? 1 : 0; }
+extern "C" int ternscope_actual_dramsim_backend() { return use_dramsim ? 1 : 0; }

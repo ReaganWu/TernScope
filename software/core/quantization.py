@@ -1,4 +1,4 @@
-"""Original quantization operators and deployment graph; training pilots removed."""
+"""Ternary weight and A8 activation operators for the TernScope deployment graph."""
 import copy
 import torch
 from torch import nn

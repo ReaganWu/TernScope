@@ -5,7 +5,7 @@ import tempfile
 import unittest
 import torch
 from runtime import fixed_split, load_w2a8, quantization as q, topology as r
-from tilepolyp import create_arraypolyp_variant
+from ternscope import create_ternscope
 
 
 class ModelChecks(unittest.TestCase):
@@ -17,7 +17,7 @@ class ModelChecks(unittest.TestCase):
         torch.manual_seed(42)
 
     def test_branch_fusion(self):
-        model = create_arraypolyp_variant('replk_tile', input_size=256).eval()
+        model = create_ternscope(input_size=256).eval()
         x = torch.randn(1, 3, 256, 256)
         with torch.inference_mode():
             before = model(x)
@@ -29,10 +29,10 @@ class ModelChecks(unittest.TestCase):
         with torch.inference_mode():
             torch.testing.assert_close(after, deployment(x), rtol=1e-4, atol=1e-4)
         self.assertEqual(len(deployment.coverage), 25)
-        self.assertEqual(sum(p.numel() for p in r.DirectDeploy().parameters()), 248273)
+        self.assertEqual(sum(p.numel() for p in r.TernScopeDeploy().parameters()), 248273)
 
     def test_ternary_coverage_gradient_and_reload(self):
-        model = q.QuantGraph(r.DirectDeploy(), 'ternary')
+        model = q.QuantGraph(r.TernScopeDeploy(), 'ternary')
         for module in model.modules():
             if isinstance(module, q.QConv):
                 module.bits = 2

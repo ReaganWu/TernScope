@@ -13,7 +13,7 @@ SOFTWARE = Path(__file__).resolve().parent
 sys.path.insert(0, str(SOFTWARE / 'core'))
 import topology as topology
 import quantization as quantization
-from tilepolyp.training import PolypSegmentationDataset, SegmentationSample, SegmentationMetrics
+from ternscope.training import PolypSegmentationDataset, SegmentationSample, SegmentationMetrics
 
 
 def sha256(path):
@@ -38,7 +38,7 @@ def load_w2a8(path, device='cpu', trusted_checkpoint=False):
     except pickle.UnpicklingError as error:
         raise ValueError('Legacy training checkpoint: use --trusted-checkpoint only for your own trusted artifact, or export a tensor-only model.') from error
     state = checkpoint.get('model', checkpoint)
-    model = quantization.QuantGraph(topology.DirectDeploy().eval(), 'ternary')
+    model = quantization.QuantGraph(topology.TernScopeDeploy().eval(), 'ternary')
     for name, module in model.named_modules():
         if isinstance(module, quantization.QConv):
             if checkpoint.get('weight_bits', {}).get(name, 2) != 2:

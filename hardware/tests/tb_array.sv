@@ -11,7 +11,7 @@ module tb_array;
   wire [31:0] out_tag;
   integer sent=0, received=0, cycles=0, row, col, k, expected;
   reg sending=0;
-  t300_array13 dut(.*);
+  ternscope_array dut(.*);
   function integer code(input integer r,c);
     if(c==0) code=2;
     else if(c==1) code=1;

@@ -14,7 +14,7 @@
 
 using namespace DRAMSim;
 static uint64_t total_aw_wait=0,total_w_wait=0,total_b_wait=0,total_writes=0;
-extern "C" uint64_t t300_ddr_audit(int k){return k==0?total_aw_wait:k==1?total_w_wait:k==2?total_b_wait:total_writes;}
+extern "C" uint64_t ternscope_ddr_audit(int k){return k==0?total_aw_wait:k==1?total_w_wait:k==2?total_b_wait:total_writes;}
 
 void mm_dramsim2_t::read_complete(unsigned id, uint64_t address, uint64_t clock_cycle)
 {

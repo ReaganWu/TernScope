@@ -5,7 +5,7 @@ module tb_cdc;
  logic wr_valid=0,wr_ready;logic[127:0]wr_data;logic rd_valid,rd_ready=0;logic[127:0]rd_data;logic rd_last,dma_done,dma_error;
  logic m_req_valid,m_req_ready=0,m_req_write,m_wr_valid,m_wr_ready=0,m_rd_valid=0,m_rd_ready,m_rd_last=0,m_done=0,m_error=0;
  logic[31:0]m_req_addr;logic[15:0]m_req_rows;logic[127:0]m_wr_data,m_rd_data;
- t300_row_cdc c(.mem_reset(reset),.*);
+ ternscope_row_cdc c(.mem_reset(reset),.*);
  bit completion_sent=0;
  integer wi=0,wo=0,ri=0,ro=0,qin=0,qout=0,clockcount=0,memcount=0,donecount=0;
  function automatic [127:0]pat(input integer n);pat={32'(n+1025),32'(n*213),32'(n^32'habcdef12),32'(n^32'hf1234567)};endfunction
