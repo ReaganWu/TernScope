@@ -10,13 +10,26 @@ Zhuoyu Wu · Wenhui Ou · Qiawei Zheng · Xuhong Qiu · Wenqi Fang · Raphaël C
 
 Monash University · HKUST · SIAT, CAS · Southeast University
 
-[Paper](https://arxiv.org/abs/2610.29617) · [Why TernScope?](#why-ternscope) · [Network](#network) · [Hardware](#hardware) · [Evaluation](#evaluation) · [Get started](#getting-started)
+[![arXiv](https://img.shields.io/badge/arXiv-2610.29617-b31b1b.svg)](https://arxiv.org/abs/2610.29617)
+
+**[Read the paper](https://arxiv.org/abs/2610.29617) · [PDF](https://arxiv.org/pdf/2610.29617) · [Cite](#citation)**
+
+[Highlights](#research-highlights) · [Why TernScope?](#why-ternscope) · [Network](#network) · [Hardware](#hardware) · [Evaluation](#evaluation) · [Get started](#getting-started)
 
 </div>
 
 ---
 
 **Included:** TernScope-Net, TPQ training, one W2A8 inference checkpoint, and accelerator RTL. Read the [paper on arXiv](https://arxiv.org/abs/2610.29617).
+
+## Research highlights
+
+TernScope produces **pixel-level polyp masks from endoscopic images**, pairing a compact segmentation network with a ternary accelerator for resource-constrained edge deployment.
+
+- **Compact network:** SplitLK and the narrow Nearest Unifier decoder retain spatial context with **0.2483 M parameters / 0.0949 GMACs**.
+- **Full-network ternary learning:** branch fusion followed by TPQ converts **all 25 convolutions**, including stem and head, to ternary weights and 8-bit activations (W2A8).
+- **Model-to-hardware mapping:** packed weights, sign-selection PEs, and shared affine/quantization hardware connect low-bit learning to storage and circuit savings.
+- **Measured research outcomes:** the paper reports **0.8158 Dice on Kvasir-SEG**, external transfer results below, and **88.46% smaller compute-array area** versus Gemmini under matched synthesis.
 
 ## Why TernScope?
 
@@ -59,6 +72,27 @@ The manuscript reports **88.46% less compute-array area** and **70.28% less stan
 Training uses **Kvasir-SEG** with a fixed **720 / 80 / 200** train/validation/test split. External evaluation uses **CVC-ClinicDB (612 images)** and **CVC-ColonDB (380 images)** without fine-tuning.
 
 Inputs are RGB 256 × 256. Dice and IoU are averaged per image at threshold 0.5; validation Dice selects checkpoints. TPQ uses FP32 initialization and no knowledge distillation.
+
+### Paper-reported segmentation results
+
+| Dataset | Evaluation | Dice ↑ | IoU ↑ |
+| :--- | :--- | ---: | ---: |
+| Kvasir-SEG | Held-out test (200 images) | **0.8158** | **0.7247** |
+| CVC-ClinicDB | External, no fine-tuning (612 images) | **0.7291** | **0.6290** |
+| CVC-ColonDB | External, no fine-tuning (380 images) | **0.5945** | **0.5015** |
+
+Source: [paper, Tables I–II](https://arxiv.org/html/2610.29617v1). These are published results, not a new evaluation of the bundled checkpoint.
+
+### Paper-reported hardware results
+
+| Metric | Original Gemmini | TernScope |
+| :--- | ---: | ---: |
+| Compute-array area (mm²) | 0.685 | **0.079** |
+| Standard-cell area (mm²) | 1.816 | **0.540** |
+| Throughput at 100 MHz (FPS) | 11.902 | **102.701** |
+| Estimated logic energy (mJ/image) | 14.019 | **0.604** |
+
+Source: [paper, Table III and §IV-C](https://arxiv.org/html/2610.29617v1). Both mappings use the same 25-convolution workload, 16 × 16 arrays, and Nangate45 synthesis. Logic energy uses OpenSTA vectorless power estimates; these are implementation-flow results rather than measured silicon or whole-system energy.
 
 ## Getting started
 
