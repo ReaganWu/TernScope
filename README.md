@@ -24,12 +24,15 @@ Monash University · HKUST · SIAT, CAS · Southeast University
 
 ## Research highlights
 
-TernScope produces **pixel-level polyp masks from endoscopic images**, pairing a compact segmentation network with a ternary accelerator for resource-constrained edge deployment.
+**Tiny model. Ternary compute. Efficient polyp segmentation.**
 
-- **Compact network:** SplitLK and the narrow Nearest Unifier decoder retain spatial context with **0.2483 M parameters / 0.0949 GMACs**.
-- **Full-network ternary learning:** branch fusion followed by TPQ converts **all 25 convolutions**, including stem and head, to ternary weights and 8-bit activations (W2A8).
-- **Model-to-hardware mapping:** packed weights, sign-selection PEs, and shared affine/quantization hardware connect low-bit learning to storage and circuit savings.
-- **Measured research outcomes:** the paper reports **0.8158 Dice on Kvasir-SEG**, external transfer results below, and **88.46% smaller compute-array area** versus Gemmini under matched synthesis.
+- 🪶 **0.2483 M params · 0.0949 GMACs** — large-kernel context, tiny footprint.
+- 🔢 **25/25 convolutions in W2A8** — fuse first, then learn ternary weights with TPQ.
+- 🧠 **Model + hardware, co-designed** — packed weights and multiplier-free PE products.
+- 🎯 **81.58% Dice** on Kvasir-SEG; **72.91% / 59.45%** on ClinicDB / ColonDB without fine-tuning.
+- ⚡ **88.46% smaller compute array · 8.63× throughput** vs. Gemmini in the paper's matched 45 nm flow.
+
+*Paper-reported results; protocols and hardware scope are detailed [below](#evaluation).*
 
 ## Why TernScope?
 
