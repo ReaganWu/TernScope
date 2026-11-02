@@ -34,14 +34,16 @@ Monash University · HKUST · SIAT, CAS · Southeast University
 
 *Paper-reported results; protocols and hardware scope are detailed [below](#evaluation).*
 
+![TernScope model–hardware co-design: parameter efficiency and compute-array area reduction.](assets/ternscope-highlights.png)
+
 ## Why TernScope?
 
 **TernScope co-designs a segmentation model and accelerator to reduce model size, computation, and circuit area together.** Split-channel large kernels preserve spatial context for polyp segmentation, while a narrow decoder combines semantic features and boundary detail.
 
 After branch fusion and progressive quantization, **all 25 convolutions—including the stem and prediction head—use ternary weights and 8-bit activations.** One ternary array therefore serves every convolution. Two-bit packing reduces weight traffic, sign selection replaces PE multiplication, and shared hardware handles scaling and multi-scale feature addition. These choices connect the network's numerical representation to the accelerator's storage and logic costs.
 
-| Parameters | Computation | Deployment graph | Quantization |
-| :---: | :---: | :---: | :---: |
+|     Parameters     |      Computation      |     Deployment graph     |  Quantization  |
+| :----------------: | :--------------------: | :-----------------------: | :------------: |
 | **0.2483 M** | **0.0949 GMACs** | **25 convolutions** | **W2A8** |
 
 *At RGB 256 × 256, batch 1. Parameters exclude quantization scales; MACs exclude normalization, activations, and interpolation.*
@@ -50,10 +52,10 @@ After branch fusion and progressive quantization, **all 25 convolutions—includ
 
 ![TernScope-Net: SplitLK, structural re-parameterization, and the Nearest Unifier.](assets/architecture.png)
 
-| Design | What it changes | Why it matters |
-| :--- | :--- | :--- |
-| **SplitLK** | Applies large spatial kernels to a subset of channels, then mixes across channels. | Retains a wide receptive field with less spatial computation. |
-| **Nearest Unifier** | Projects four encoder scales to 16 channels and fuses them through resizing and addition. | Combines semantic context and spatial detail while keeping the decoder narrow. |
+| Design                        | What it changes                                                                                 | Why it matters                                                                       |
+| :---------------------------- | :---------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------- |
+| **SplitLK**             | Applies large spatial kernels to a subset of channels, then mixes across channels.              | Retains a wide receptive field with less spatial computation.                        |
+| **Nearest Unifier**     | Projects four encoder scales to 16 channels and fuses them through resizing and addition.       | Combines semantic context and spatial detail while keeping the decoder narrow.       |
 | **Branch fusion + TPQ** | Merges training branches before progressively adapting the deployment graph to ternary weights. | Removes redundant inference paths and trains all 25 convolutions for W2A8 execution. |
 
 **TPQ** is Ternary Progressive Quantization-aware Training: W8A8 adaptation, deep-to-shallow conversion through the encoder and decoder, then training of the fully W2A8 graph. Each output channel has a learned weight scale; biases, scaling, and accumulation retain wider precision.
@@ -78,24 +80,22 @@ Inputs are RGB 256 × 256. Dice and IoU are averaged per image at threshold 0.5;
 
 ### Paper-reported segmentation results
 
-| Dataset | Evaluation | Dice ↑ | IoU ↑ |
-| :--- | :--- | ---: | ---: |
-| Kvasir-SEG | Held-out test (200 images) | **0.8158** | **0.7247** |
+| Dataset      | Evaluation                            |          Dice ↑ |           IoU ↑ |
+| :----------- | :------------------------------------ | ---------------: | ---------------: |
+| Kvasir-SEG   | Held-out test (200 images)            | **0.8158** | **0.7247** |
 | CVC-ClinicDB | External, no fine-tuning (612 images) | **0.7291** | **0.6290** |
-| CVC-ColonDB | External, no fine-tuning (380 images) | **0.5945** | **0.5015** |
-
-Source: [paper, Tables I–II](https://arxiv.org/html/2610.29617v1). These are published results, not a new evaluation of the bundled checkpoint.
+| CVC-ColonDB  | External, no fine-tuning (380 images) | **0.5945** | **0.5015** |
 
 ### Paper-reported hardware results
 
-| Metric | Original Gemmini | TernScope |
-| :--- | ---: | ---: |
-| Compute-array area (mm²) | 0.685 | **0.079** |
-| Standard-cell area (mm²) | 1.816 | **0.540** |
-| Throughput at 100 MHz (FPS) | 11.902 | **102.701** |
-| Estimated logic energy (mJ/image) | 14.019 | **0.604** |
+| Metric                            | Original Gemmini |         TernScope |
+| :-------------------------------- | ---------------: | ----------------: |
+| Compute-array area (mm²)         |            0.685 |   **0.079** |
+| Standard-cell area (mm²)         |            1.816 |   **0.540** |
+| Throughput at 100 MHz (FPS)       |           11.902 | **102.701** |
+| Estimated logic energy (mJ/image) |           14.019 |   **0.604** |
 
-Source: [paper, Table III and §IV-C](https://arxiv.org/html/2610.29617v1). Both mappings use the same 25-convolution workload, 16 × 16 arrays, and Nangate45 synthesis. Logic energy uses OpenSTA vectorless power estimates; these are implementation-flow results rather than measured silicon or whole-system energy.
+Both mappings use the same 25-convolution workload, 16 × 16 arrays, and Nangate45 synthesis. Logic energy uses OpenSTA vectorless power estimates; these are implementation-flow results rather than measured silicon or whole-system energy.
 
 ## Getting started
 
@@ -107,10 +107,10 @@ python software/infer.py --image path/to/image.png --output runs/mask.png
 
 The default inference weight is bundled. Training needs an external FP32 initializer; datasets are obtained separately.
 
-| Directory | Contents |
-| :--- | :--- |
-| [software/](software/README.md) | TernScope-Net, branch fusion, TPQ, fixed split, inference and evaluation. |
-| [weights/](weights/README.md) | One tensor-only W2A8 checkpoint and its training metadata. |
+| Directory                    | Contents                                                                                |
+| :--------------------------- | :-------------------------------------------------------------------------------------- |
+| [software/](software/README.md) | TernScope-Net, branch fusion, TPQ, fixed split, inference and evaluation.               |
+| [weights/](weights/README.md)   | One tensor-only W2A8 checkpoint and its training metadata.                              |
 | [hardware/](hardware/README.md) | Accelerator RTL, integer reference, control generation, module tests and build scripts. |
 
 ## Citation
