@@ -18,6 +18,8 @@ Monash University · HKUST · SIAT, CAS · Southeast University
 
 [Highlights](#research-highlights) · [Why TernScope?](#why-ternscope) · [Network](#network) · [Hardware](#hardware) · [Evaluation](#evaluation) · [Leaderboard](#leaderboard-accuracy-vs-cost-paper-table-i) · [Get started](#getting-started)
 
+<img src="assets/ternscope-teaser.png" alt="TernScope at a glance: external Dice vs. parameters against lightweight baselines, and compute-array area, standard-cell area, logic energy and throughput vs. Gemmini." width="100%">
+
 </div>
 
 ---
@@ -35,8 +37,6 @@ Monash University · HKUST · SIAT, CAS · Southeast University
 - ⚡ **88.46% smaller compute array · 8.63× throughput** vs. Gemmini in the paper's matched 45 nm flow.
 
 *Paper-reported results; protocols and hardware scope are detailed [below](#evaluation).*
-
-![TernScope at a glance: external Dice vs. parameters against lightweight baselines, and compute-array area, standard-cell area, logic energy and throughput vs. Gemmini.](assets/ternscope-highlights.png)
 
 ## Why TernScope?
 
