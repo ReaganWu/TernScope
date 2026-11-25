@@ -1,79 +1,109 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1080" viewBox="0 0 1800 1080"><rect width="1800" height="1080" fill="#F6F3EB"/><g font-family="Helvetica Neue, Arial, sans-serif">
-<text x="80" y="65" font-size="18" fill="#746E63" font-weight="500" text-anchor="start" letter-spacing="2">TERNSCOPE  /  MODEL–HARDWARE CO-DESIGN</text>
-<text x="80" y="145" font-size="57" fill="#292824" font-weight="600" text-anchor="start" >Small model. Strong transfer. Less logic.</text>
-<text x="80" y="193" font-size="25" fill="#746E63" font-weight="400" text-anchor="start" >Ternary endoscopic segmentation, from network design to accelerator area.</text>
-<line x1="80" y1="232" x2="1720" y2="232" stroke="#DDD8CE" stroke-dasharray=""/>
-<text x="80" y="287" font-size="18" fill="#7955A6" font-weight="600" text-anchor="start" >01</text>
-<text x="125" y="287" font-size="28" fill="#292824" font-weight="500" text-anchor="start" >High accuracy. A fraction of the parameters.</text>
-<text x="1010" y="287" font-size="18" fill="#7955A6" font-weight="600" text-anchor="start" >02</text>
-<text x="1055" y="287" font-size="28" fill="#292824" font-weight="500" text-anchor="start" >Ternary arithmetic. Dramatically less area.</text>
-<text x="80" y="335" font-size="19" fill="#746E63" font-weight="400" text-anchor="start" >CVC-ClinicDB Dice ↑  ·  trained on Kvasir-SEG only</text>
-<text x="1010" y="335" font-size="19" fill="#746E63" font-weight="400" text-anchor="start" >Compute-array area ↓  ·  matched 45 nm synthesis</text>
-<line x1="155" y1="790.0" x2="890" y2="790.0" stroke="#DDD8CE" stroke-dasharray=""/>
-<text x="135" y="796.0" font-size="17" fill="#8A8377" font-weight="400" text-anchor="end" >30</text>
-<line x1="155" y1="713.0" x2="890" y2="713.0" stroke="#DDD8CE" stroke-dasharray=""/>
-<text x="135" y="719.0" font-size="17" fill="#8A8377" font-weight="400" text-anchor="end" >40</text>
-<line x1="155" y1="636.0" x2="890" y2="636.0" stroke="#DDD8CE" stroke-dasharray=""/>
-<text x="135" y="642.0" font-size="17" fill="#8A8377" font-weight="400" text-anchor="end" >50</text>
-<line x1="155" y1="559.0" x2="890" y2="559.0" stroke="#DDD8CE" stroke-dasharray=""/>
-<text x="135" y="565.0" font-size="17" fill="#8A8377" font-weight="400" text-anchor="end" >60</text>
-<line x1="155" y1="482.0" x2="890" y2="482.0" stroke="#DDD8CE" stroke-dasharray=""/>
-<text x="135" y="488.0" font-size="17" fill="#8A8377" font-weight="400" text-anchor="end" >70</text>
-<line x1="155" y1="405.0" x2="890" y2="405.0" stroke="#DDD8CE" stroke-dasharray=""/>
-<text x="135" y="411.0" font-size="17" fill="#8A8377" font-weight="400" text-anchor="end" >80</text>
-<text x="178.74295318697378" y="822" font-size="17" fill="#8A8377" font-weight="400" text-anchor="middle" >0.05</text>
-<text x="252.49530212464919" y="822" font-size="17" fill="#8A8377" font-weight="400" text-anchor="middle" >0.1</text>
-<text x="423.7429531869738" y="822" font-size="17" fill="#8A8377" font-weight="400" text-anchor="middle" >0.5</text>
-<text x="497.4953021246492" y="822" font-size="17" fill="#8A8377" font-weight="400" text-anchor="middle" >1</text>
-<text x="668.7429531869738" y="822" font-size="17" fill="#8A8377" font-weight="400" text-anchor="middle" >5</text>
-<text x="742.4953021246491" y="822" font-size="17" fill="#8A8377" font-weight="400" text-anchor="middle" >10</text>
-<text x="859.3900095309665" y="822" font-size="17" fill="#8A8377" font-weight="400" text-anchor="middle" >30</text>
-<text x="522.5" y="866" font-size="19" fill="#746E63" font-weight="400" text-anchor="middle" >Parameters (M) · logarithmic scale →</text>
-<circle cx="862.9876662983281" cy="498.09299999999996" r="6.5" fill="#AAA59A"/>
-<text x="847.9876662983281" y="480.09299999999996" font-size="15" fill="#746E63" font-weight="400" text-anchor="end" >U-Net</text>
-<circle cx="538.6254869226725" cy="620.0609999999999" r="6.5" fill="#AAA59A"/>
-<text x="550.6254869226725" y="608.0609999999999" font-size="15" fill="#746E63" font-weight="400" text-anchor="start" >UNeXt</text>
-<circle cx="338.2585550515116" cy="682.97" r="6.5" fill="#AAA59A"/>
-<text x="326.2585550515116" y="710.97" font-size="15" fill="#746E63" font-weight="400" text-anchor="end" >Mobile-PolypNet</text>
-<circle cx="185.74291009664552" cy="677.2719999999999" r="6.5" fill="#AAA59A"/>
-<text x="197.74291009664552" y="662.2719999999999" font-size="15" fill="#746E63" font-weight="400" text-anchor="start" >EGE-UNet</text>
-<circle cx="404.5561396804563" cy="633.7669999999999" r="6.5" fill="#AAA59A"/>
-<text x="392.5561396804563" y="618.7669999999999" font-size="15" fill="#746E63" font-weight="400" text-anchor="end" >CMUNeXt-S</text>
-<circle cx="419.64296456577745" cy="620.523" r="6.5" fill="#AAA59A"/>
-<text x="419.64296456577745" y="586.523" font-size="15" fill="#746E63" font-weight="400" text-anchor="middle" >TinyU-Net</text>
-<circle cx="417.24979382632927" cy="644.085" r="6.5" fill="#AAA59A"/>
-<text x="433.24979382632927" y="657.085" font-size="15" fill="#746E63" font-weight="400" text-anchor="start" >U-RWKV-s</text>
-<circle cx="464.8514490809507" cy="643.084" r="6.5" fill="#AAA59A"/>
-<text x="482.8514490809507" y="672.084" font-size="15" fill="#746E63" font-weight="400" text-anchor="start" >DAG-UNet</text>
-<circle cx="314.38483556365554" cy="576.248" r="6.5" fill="#AAA59A"/>
-<text x="302.38483556365554" y="558.248" font-size="15" fill="#746E63" font-weight="400" text-anchor="end" >ESE-UNet-ESK</text>
-<circle cx="349.2645984155174" cy="459.593" r="23" fill="#8964B0" opacity=".13"/><circle cx="349.2645984155174" cy="459.593" r="10" fill="#8964B0" stroke="#F6F3EB" stroke-width="3"/>
-<text x="373.2645984155174" y="441.593" font-size="24" fill="#704696" font-weight="600" text-anchor="start" >TernScope</text>
-<text x="373.2645984155174" y="471.593" font-size="18" fill="#704696" font-weight="400" text-anchor="start" >0.2483 M · 72.91 Dice</text>
-<text x="155" y="922" font-size="28" fill="#704696" font-weight="500" text-anchor="start" >125× fewer parameters than U-Net</text>
-<text x="155" y="953" font-size="20" fill="#746E63" font-weight="400" text-anchor="start" >+5.00 percentage points in external Dice</text>
-<line x1="1080" y1="790.0" x2="1660" y2="790.0" stroke="#DDD8CE" stroke-dasharray=""/>
-<text x="1062" y="796.0" font-size="17" fill="#8A8377" font-weight="400" text-anchor="end" >0.0</text>
-<line x1="1080" y1="695.0" x2="1660" y2="695.0" stroke="#DDD8CE" stroke-dasharray=""/>
-<text x="1062" y="701.0" font-size="17" fill="#8A8377" font-weight="400" text-anchor="end" >0.2</text>
-<line x1="1080" y1="600.0" x2="1660" y2="600.0" stroke="#DDD8CE" stroke-dasharray=""/>
-<text x="1062" y="606.0" font-size="17" fill="#8A8377" font-weight="400" text-anchor="end" >0.4</text>
-<line x1="1080" y1="505.00000000000006" x2="1660" y2="505.00000000000006" stroke="#DDD8CE" stroke-dasharray=""/>
-<text x="1062" y="511.00000000000006" font-size="17" fill="#8A8377" font-weight="400" text-anchor="end" >0.6</text>
-<line x1="1080" y1="410.0" x2="1660" y2="410.0" stroke="#DDD8CE" stroke-dasharray=""/>
-<text x="1062" y="416.0" font-size="17" fill="#8A8377" font-weight="400" text-anchor="end" >0.8</text>
-<text x="1070" y="385" font-size="17" fill="#8A8377" font-weight="400" text-anchor="start" >mm²</text>
-<rect x="1142" y="464.625" width="136" height="325.375" rx="3" fill="#B9B2A4"/>
-<text x="1210" y="446.625" font-size="27" fill="#B9B2A4" font-weight="600" text-anchor="middle" >0.685</text>
-<text x="1210" y="827" font-size="20" fill="#292824" font-weight="400" text-anchor="middle" >Gemmini INT8</text>
-<rect x="1442" y="752.475" width="136" height="37.525" rx="3" fill="#8964B0"/>
-<text x="1510" y="734.475" font-size="27" fill="#8964B0" font-weight="600" text-anchor="middle" >0.079</text>
-<text x="1510" y="827" font-size="20" fill="#292824" font-weight="400" text-anchor="middle" >TernScope W2A8</text>
-<text x="1510" y="445" font-size="55" fill="#704696" font-weight="600" text-anchor="middle" >−88.46%</text>
-<text x="1510" y="477" font-size="19" fill="#746E63" font-weight="400" text-anchor="middle" >compute-array area</text>
-<text x="1080" y="922" font-size="28" fill="#704696" font-weight="500" text-anchor="start" >One ternary array. All 25 convolutions.</text>
-<text x="1080" y="953" font-size="20" fill="#746E63" font-weight="400" text-anchor="start" >Sign selection replaces PE product multipliers.</text>
-<line x1="80" y1="989" x2="1720" y2="989" stroke="#DDD8CE" stroke-dasharray=""/>
-<text x="80" y="1024" font-size="16" fill="#827B70" font-weight="400" text-anchor="start" >Source: arXiv:2610.29617v1, Tables I &amp; III. RGB 256 × 256; external evaluation without fine-tuning.</text>
-<text x="80" y="1052" font-size="16" fill="#827B70" font-weight="400" text-anchor="start" >Area: 16 × 16 arrays, Nangate45 / Yosys–ABC. Synthesized logic only; excludes SRAM macros and physical implementation.</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="940" viewBox="0 0 1800 940">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6D4AFF"/><stop offset="1" stop-color="#3B82F6"/></linearGradient><radialGradient id="halo"><stop offset="0" stop-color="#6D4AFF" stop-opacity=".28"/><stop offset="1" stop-color="#6D4AFF" stop-opacity="0"/></radialGradient><filter id="sh" x="-5%" y="-5%" width="110%" height="115%"><feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#2A1F5C" flood-opacity=".08"/></filter></defs>
+<rect x="0" y="0" width="1800" height="940" rx="28" fill="#FFFFFF"/>
+<g font-family="Inter, Helvetica, Arial, sans-serif">
+<rect x="60" y="56" width="6" height="74" rx="3" fill="url(#g)"/>
+<text x="88.0" y="88.0" font-size="17" fill="#5B3FD6" font-weight="700" text-anchor="start" letter-spacing="2.5">TERNSCOPE · MODEL–HARDWARE CO-DESIGN</text>
+<text x="88.0" y="130.0" font-size="38" fill="#16151A" font-weight="700" text-anchor="start" letter-spacing="-0.6">Ternary segmentation that generalizes — on a fraction of the silicon.</text>
+<rect x="60.0" y="168" width="320.0" height="92" rx="16" fill="#F6F4FD" stroke="#E6E1FA"/>
+<text x="84.0" y="214.0" font-size="34" fill="#5B3FD6" font-weight="700" text-anchor="start" letter-spacing="-0.5">0.25 M</text>
+<text x="84.0" y="243.0" font-size="16" fill="#6B6878" font-weight="500" text-anchor="start" >parameters</text>
+<rect x="400.0" y="168" width="320.0" height="92" rx="16" fill="#F6F4FD" stroke="#E6E1FA"/>
+<text x="424.0" y="214.0" font-size="34" fill="#5B3FD6" font-weight="700" text-anchor="start" letter-spacing="-0.5">0.095</text>
+<text x="424.0" y="243.0" font-size="16" fill="#6B6878" font-weight="500" text-anchor="start" >GMACs @ 256²</text>
+<rect x="740.0" y="168" width="320.0" height="92" rx="16" fill="#F6F4FD" stroke="#E6E1FA"/>
+<text x="764.0" y="214.0" font-size="34" fill="#16151A" font-weight="700" text-anchor="start" letter-spacing="-0.5">W2A8</text>
+<text x="764.0" y="243.0" font-size="16" fill="#6B6878" font-weight="500" text-anchor="start" >25 / 25 convs</text>
+<rect x="1080.0" y="168" width="320.0" height="92" rx="16" fill="#F6F4FD" stroke="#E6E1FA"/>
+<text x="1104.0" y="214.0" font-size="34" fill="#5B3FD6" font-weight="700" text-anchor="start" letter-spacing="-0.5">−88.5%</text>
+<text x="1104.0" y="243.0" font-size="16" fill="#6B6878" font-weight="500" text-anchor="start" >compute-array area</text>
+<rect x="1420.0" y="168" width="320.0" height="92" rx="16" fill="#F6F4FD" stroke="#E6E1FA"/>
+<text x="1444.0" y="214.0" font-size="34" fill="#5B3FD6" font-weight="700" text-anchor="start" letter-spacing="-0.5">8.63×</text>
+<text x="1444.0" y="243.0" font-size="16" fill="#6B6878" font-weight="500" text-anchor="start" >throughput vs. Gemmini</text>
+<rect x="60" y="292" width="1000" height="610" rx="20" fill="#FFFFFF" stroke="#ECEAF2" filter="url(#sh)"/>
+<rect x="1080" y="292" width="660" height="610" rx="20" fill="#FFFFFF" stroke="#ECEAF2" filter="url(#sh)"/>
+<text x="92.0" y="342.0" font-size="24" fill="#16151A" font-weight="700" text-anchor="start" >Accuracy vs. model size</text>
+<text x="92.0" y="372.0" font-size="16" fill="#6B6878" font-weight="500" text-anchor="start" >Mean external Dice (Kvasir-SEG → ClinicDB, ColonDB · no fine-tuning)</text>
+<line x1="150" y1="822.0" x2="1020" y2="822.0" stroke="#ECEAF2"/>
+<text x="136.0" y="828.0" font-size="15" fill="#6B6878" font-weight="500" text-anchor="end" >30</text>
+<line x1="150" y1="730.8888888888889" x2="1020" y2="730.8888888888889" stroke="#ECEAF2"/>
+<text x="136.0" y="736.9" font-size="15" fill="#6B6878" font-weight="500" text-anchor="end" >40</text>
+<line x1="150" y1="639.7777777777778" x2="1020" y2="639.7777777777778" stroke="#ECEAF2"/>
+<text x="136.0" y="645.8" font-size="15" fill="#6B6878" font-weight="500" text-anchor="end" >50</text>
+<line x1="150" y1="548.6666666666667" x2="1020" y2="548.6666666666667" stroke="#ECEAF2"/>
+<text x="136.0" y="554.7" font-size="15" fill="#6B6878" font-weight="500" text-anchor="end" >60</text>
+<line x1="150" y1="457.5555555555556" x2="1020" y2="457.5555555555556" stroke="#ECEAF2"/>
+<text x="136.0" y="463.6" font-size="15" fill="#6B6878" font-weight="500" text-anchor="end" >70</text>
+<text x="177.2" y="852.0" font-size="15" fill="#6B6878" font-weight="500" text-anchor="middle" >0.05</text>
+<text x="261.8" y="852.0" font-size="15" fill="#6B6878" font-weight="500" text-anchor="middle" >0.1</text>
+<text x="395.8" y="852.0" font-size="15" fill="#6B6878" font-weight="500" text-anchor="middle" >0.3</text>
+<text x="542.7" y="852.0" font-size="15" fill="#6B6878" font-weight="500" text-anchor="middle" >1</text>
+<text x="676.8" y="852.0" font-size="15" fill="#6B6878" font-weight="500" text-anchor="middle" >3</text>
+<text x="823.6" y="852.0" font-size="15" fill="#6B6878" font-weight="500" text-anchor="middle" >10</text>
+<text x="957.7" y="852.0" font-size="15" fill="#6B6878" font-weight="500" text-anchor="middle" >30</text>
+<text x="585.0" y="882.0" font-size="16" fill="#6B6878" font-weight="600" text-anchor="middle" >Parameters (M, log scale)</text>
+<g opacity=".9"><path d="M190 482 L164 430" stroke="#8B74F0" stroke-width="2" fill="none" marker-end=""/><path d="M164 430 l2 12 l8 -8 z" fill="#8B74F0"/></g>
+<text x="198.0" y="492.0" font-size="14" fill="#8B74F0" font-weight="600" text-anchor="start" >better</text>
+<circle cx="961.8" cy="541.8" r="8" fill="#C9C6D3" stroke="#fff" stroke-width="2"/>
+<text x="949.8" y="525.8" font-size="15" fill="#6B6878" font-weight="500" text-anchor="end" >U-Net</text>
+<circle cx="589.9" cy="685.7" r="8" fill="#C9C6D3" stroke="#fff" stroke-width="2"/>
+<text x="601.9" y="690.7" font-size="15" fill="#6B6878" font-weight="500" text-anchor="start" >UNeXt</text>
+<circle cx="360.1" cy="771.8" r="8" fill="#C9C6D3" stroke="#fff" stroke-width="2"/>
+<text x="348.1" y="795.8" font-size="15" fill="#6B6878" font-weight="500" text-anchor="end" >Mobile-PolypNet</text>
+<circle cx="185.3" cy="764.2" r="8" fill="#C9C6D3" stroke="#fff" stroke-width="2"/>
+<text x="197.3" y="752.2" font-size="15" fill="#6B6878" font-weight="500" text-anchor="start" >EGE-UNet</text>
+<circle cx="436.1" cy="722.8" r="8" fill="#C9C6D3" stroke="#fff" stroke-width="2"/>
+<text x="424.1" y="710.8" font-size="15" fill="#6B6878" font-weight="500" text-anchor="end" >CMUNeXt-S</text>
+<circle cx="453.4" cy="732.3" r="8" fill="#C9C6D3" stroke="#fff" stroke-width="2"/>
+<text x="465.4" y="722.3" font-size="15" fill="#6B6878" font-weight="500" text-anchor="start" >TinyU-Net</text>
+<circle cx="450.7" cy="747.0" r="8" fill="#C9C6D3" stroke="#fff" stroke-width="2"/>
+<text x="438.7" y="767.0" font-size="15" fill="#6B6878" font-weight="500" text-anchor="end" >U-RWKV-s</text>
+<circle cx="505.3" cy="758.6" r="8" fill="#C9C6D3" stroke="#fff" stroke-width="2"/>
+<text x="517.3" y="764.6" font-size="15" fill="#6B6878" font-weight="500" text-anchor="start" >DAG-UNet</text>
+<circle cx="332.8" cy="644.8" r="8" fill="#C9C6D3" stroke="#fff" stroke-width="2"/>
+<text x="320.8" y="632.8" font-size="15" fill="#6B6878" font-weight="500" text-anchor="end" >ESE-UNet-ESK</text>
+<circle cx="372.7502738728589" cy="492.35999999999996" r="46" fill="url(#halo)"/><circle cx="372.7502738728589" cy="492.35999999999996" r="12" fill="url(#g)" stroke="#fff" stroke-width="3"/>
+<text x="398.8" y="452.4" font-size="21" fill="#5B3FD6" font-weight="800" text-anchor="start" >TernScope-Net</text>
+<text x="398.8" y="476.4" font-size="16" fill="#5B3FD6" font-weight="600" text-anchor="start" >66.2 Dice · 0.25 M · W2A8</text>
+<line x1="386.7502738728589" y1="498.35999999999996" x2="949.8022936389101" y2="537.7422222222223" stroke="#8B74F0" stroke-width="1.6" stroke-dasharray="6 6"/>
+<text x="707.3" y="551.1" font-size="15" fill="#5B3FD6" font-weight="700" text-anchor="middle" >125× fewer params · +5.4 Dice pts vs. U-Net</text>
+<text x="1112.0" y="342.0" font-size="24" fill="#16151A" font-weight="700" text-anchor="start" >Hardware vs. Gemmini (INT8)</text>
+<text x="1112.0" y="372.0" font-size="16" fill="#6B6878" font-weight="500" text-anchor="start" >Same 25-conv workload · 16×16 PEs · Nangate45 · 100 MHz</text>
+<text x="1112.0" y="432.0" font-size="18" fill="#16151A" font-weight="700" text-anchor="start" >Compute-array area</text>
+<text x="1552.0" y="432.0" font-size="22" fill="#5B3FD6" font-weight="800" text-anchor="end" >−88.5%</text>
+<rect x="1112" y="448" width="440" height="18" rx="9" fill="#F4F3F8"/>
+<rect x="1112" y="448" width="440.0" height="18" rx="9" fill="#C9C6D3"/>
+<rect x="1112" y="474" width="440" height="18" rx="9" fill="#F4F3F8"/>
+<rect x="1112" y="474" width="50.7" height="18" rx="9" fill="url(#g)"/>
+<text x="1568.0" y="463.0" font-size="15" fill="#6B6878" font-weight="600" text-anchor="start" >0.685</text>
+<text x="1568.0" y="489.0" font-size="15" fill="#5B3FD6" font-weight="700" text-anchor="start" >0.079 mm²</text>
+<text x="1112.0" y="544.0" font-size="18" fill="#16151A" font-weight="700" text-anchor="start" >Standard-cell area</text>
+<text x="1552.0" y="544.0" font-size="22" fill="#5B3FD6" font-weight="800" text-anchor="end" >−70.3%</text>
+<rect x="1112" y="560" width="440" height="18" rx="9" fill="#F4F3F8"/>
+<rect x="1112" y="560" width="440.0" height="18" rx="9" fill="#C9C6D3"/>
+<rect x="1112" y="586" width="440" height="18" rx="9" fill="#F4F3F8"/>
+<rect x="1112" y="586" width="130.8" height="18" rx="9" fill="url(#g)"/>
+<text x="1568.0" y="575.0" font-size="15" fill="#6B6878" font-weight="600" text-anchor="start" >1.816</text>
+<text x="1568.0" y="601.0" font-size="15" fill="#5B3FD6" font-weight="700" text-anchor="start" >0.54 mm²</text>
+<text x="1112.0" y="656.0" font-size="18" fill="#16151A" font-weight="700" text-anchor="start" >Logic energy / image</text>
+<text x="1552.0" y="656.0" font-size="22" fill="#5B3FD6" font-weight="800" text-anchor="end" >−95.7%</text>
+<rect x="1112" y="672" width="440" height="18" rx="9" fill="#F4F3F8"/>
+<rect x="1112" y="672" width="440.0" height="18" rx="9" fill="#C9C6D3"/>
+<rect x="1112" y="698" width="440" height="18" rx="9" fill="#F4F3F8"/>
+<rect x="1112" y="698" width="19.0" height="18" rx="9" fill="url(#g)"/>
+<text x="1568.0" y="687.0" font-size="15" fill="#6B6878" font-weight="600" text-anchor="start" >14.019</text>
+<text x="1568.0" y="713.0" font-size="15" fill="#5B3FD6" font-weight="700" text-anchor="start" >0.604 mJ</text>
+<text x="1112.0" y="768.0" font-size="18" fill="#16151A" font-weight="700" text-anchor="start" >Throughput</text>
+<text x="1552.0" y="768.0" font-size="22" fill="#5B3FD6" font-weight="800" text-anchor="end" >8.63×</text>
+<rect x="1112" y="784" width="440" height="18" rx="9" fill="#F4F3F8"/>
+<rect x="1112" y="784" width="51.0" height="18" rx="9" fill="#C9C6D3"/>
+<rect x="1112" y="810" width="440" height="18" rx="9" fill="#F4F3F8"/>
+<rect x="1112" y="810" width="440.0" height="18" rx="9" fill="url(#g)"/>
+<text x="1568.0" y="799.0" font-size="15" fill="#6B6878" font-weight="600" text-anchor="start" >11.902</text>
+<text x="1568.0" y="825.0" font-size="15" fill="#5B3FD6" font-weight="700" text-anchor="start" >102.701 FPS</text>
+<rect x="1112" y="855" width="22" height="12" rx="6" fill="#C9C6D3"/>
+<text x="1142.0" y="867.0" font-size="15" fill="#6B6878" font-weight="600" text-anchor="start" >Gemmini INT8</text>
+<rect x="1282" y="855" width="22" height="12" rx="6" fill="url(#g)"/>
+<text x="1312.0" y="867.0" font-size="15" fill="#5B3FD6" font-weight="700" text-anchor="start" >TernScope W2A8</text>
+<text x="1740.0" y="926.0" font-size="13" fill="#9A97A6" font-weight="500" text-anchor="end" >Paper-reported results · arXiv:2610.29617</text>
 </g></svg>
