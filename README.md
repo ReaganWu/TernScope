@@ -14,7 +14,7 @@ Monash University · HKUST · SIAT, CAS · Southeast University
 
 **[Read the paper](https://arxiv.org/abs/2610.29617) · [PDF](https://arxiv.org/pdf/2610.29617) · [Cite](#citation)**
 
-[Highlights](#research-highlights) · [Why TernScope?](#why-ternscope) · [Network](#network) · [Hardware](#hardware) · [Evaluation](#evaluation) · [Get started](#getting-started)
+[Highlights](#research-highlights) · [Why TernScope?](#why-ternscope) · [Network](#network) · [Hardware](#hardware) · [Evaluation](#evaluation) · [Leaderboard](#leaderboard-accuracy-vs-cost-paper-table-i) · [Get started](#getting-started)
 
 </div>
 
@@ -85,6 +85,27 @@ Inputs are RGB 256 × 256. Dice and IoU are averaged per image at threshold 0.5;
 | Kvasir-SEG   | Held-out test (200 images)            | **0.8158** | **0.7247** |
 | CVC-ClinicDB | External, no fine-tuning (612 images) | **0.7291** | **0.6290** |
 | CVC-ColonDB  | External, no fine-tuning (380 images) | **0.5945** | **0.5015** |
+
+### Leaderboard: accuracy vs. cost (paper Table I)
+
+All models are trained on **Kvasir-SEG only** under the same protocol; ClinicDB and ColonDB are external tests **without fine-tuning**. 🥇 best, 🥈 second-best per column.
+
+| Model | Year | Params (M) ↓ | GMACs ↓ | W/A | Kvasir Dice ↑ | Kvasir IoU ↑ | → ClinicDB Dice ↑ | → ClinicDB IoU ↑ | → ColonDB Dice ↑ | → ColonDB IoU ↑ |
+| :-- | :--: | --: | --: | :--: | --: | --: | --: | --: | --: | --: |
+| U-Net | 2015 | 31.0317 | 48.1670 | 32/32 | 🥇 0.8208 | 🥇 0.7303 | 🥈 0.6791 | 🥈 0.5849 | 🥈 0.5360 | 🥈 0.4471 |
+| UNeXt | 2022 | 1.4719 | 0.5620 | 32/32 | 0.7385 | 0.6435 | 0.5207 | 0.4274 | 0.3785 | 0.2999 |
+| Mobile-PolypNet | 2022 | 0.2239 | 1.1380 | 32/32 | 0.5974 | 0.4720 | 0.4390 | 0.3269 | 0.2711 | 0.1887 |
+| EGE-UNet | 2023 | 🥇 0.0534 | 🥇 0.0720 | 32/32 | 0.5882 | 0.4611 | 0.4464 | 0.3276 | 0.2804 | 0.1950 |
+| CMUNeXt-S | 2024 | 0.4175 | 1.0120 | 32/32 | 0.7120 | 0.6076 | 0.5029 | 0.3954 | 0.3148 | 0.2436 |
+| TinyU-Net | 2024 | 0.4811 | 1.5610 | 32/32 | 0.7329 | 0.6286 | 0.5201 | 0.4329 | 0.2768 | 0.2194 |
+| U-RWKV-s | 2025 | 0.4704 | 0.9740† | 32/32 | 0.6727 | 0.5608 | 0.4895 | 0.3795 | 0.2752 | 0.2035 |
+| DAG-UNet | 2025 | 0.7358 | 0.7760 | 32/32 | 0.6785 | 0.5565 | 0.4908 | 0.3781 | 0.2484 | 0.1778 |
+| ESEUNet-ESK | 2026 | 🥈 0.1789 | 3.5190 | 32/32 | 0.7693 | 0.6775 | 0.5776 | 0.4759 | 0.4113 | 0.3333 |
+| **TernScope-Net (ours)** | 2026 | 0.2483 | 🥈 **0.0949** | **2/8** | 🥈 **0.8158** | 🥈 **0.7247** | 🥇 **0.7291** | 🥇 **0.6290** | 🥇 **0.5945** | 🥇 **0.5015** |
+
+**Takeaway:** with ~1/125 of U-Net's parameters and ~1/508 of its MACs, TernScope-Net stays within 0.51 points of U-Net's in-domain Dice and **leads every external test** (+5.00 / +5.85 Dice points on ClinicDB / ColonDB), while running all convolutions in W2A8.
+
+*Per-image means at threshold 0.5, 256 × 256 input. TernScope's parameters exclude quantization scales. † WKV operators excluded; partial count. Also listed on [Papers with Code](https://paperswithcode.co/paper/2610.29617).*
 
 ### Paper-reported hardware results
 
