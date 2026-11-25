@@ -11,8 +11,10 @@ Zhuoyu Wu · Wenhui Ou · Qiawei Zheng · Xuhong Qiu · Wenqi Fang · Raphaël C
 Monash University · HKUST · SIAT, CAS · Southeast University
 
 [![arXiv](https://img.shields.io/badge/arXiv-2610.29617-b31b1b.svg)](https://arxiv.org/abs/2610.29617)
+[![Papers with Code](https://img.shields.io/badge/Papers%20with%20Code-benchmarks-21cbce.svg)](https://paperswithcode.co/paper/2610.29617)
+[![HF Daily Papers](https://img.shields.io/badge/%F0%9F%A4%97%20Daily%20Papers-2610.29617-ffd21e.svg)](https://huggingface.co/papers/2610.29617)
 
-**[Read the paper](https://arxiv.org/abs/2610.29617) · [PDF](https://arxiv.org/pdf/2610.29617) · [Cite](#citation)**
+**[Read the paper](https://arxiv.org/abs/2610.29617) · [PDF](https://arxiv.org/pdf/2610.29617) · [Papers with Code](https://paperswithcode.co/paper/2610.29617) · [Cite](#citation)**
 
 [Highlights](#research-highlights) · [Why TernScope?](#why-ternscope) · [Network](#network) · [Hardware](#hardware) · [Evaluation](#evaluation) · [Leaderboard](#leaderboard-accuracy-vs-cost-paper-table-i) · [Get started](#getting-started)
 
@@ -34,7 +36,7 @@ Monash University · HKUST · SIAT, CAS · Southeast University
 
 *Paper-reported results; protocols and hardware scope are detailed [below](#evaluation).*
 
-![TernScope model–hardware co-design: parameter efficiency and compute-array area reduction.](assets/ternscope-highlights.png)
+![TernScope at a glance: external Dice vs. parameters against lightweight baselines, and compute-array area, standard-cell area, logic energy and throughput vs. Gemmini.](assets/ternscope-highlights.png)
 
 ## Why TernScope?
 
